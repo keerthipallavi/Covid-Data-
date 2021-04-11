@@ -1,0 +1,52 @@
+import pandas as pd
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+input_path="/Applications/Project /dataset/"
+input_file=input_path+"KAtrace.csv"
+
+inf_data=pd.read_csv(input_file)
+inf_data.shape
+
+missing_data = inf_data.isnull().sum()
+total_percentage = (missing_data.sum()/inf_data.shape[0]) * 100
+print(f'The total percentage of missing data is {round(total_percentage,2)}%')
+
+total = inf_data.isnull().sum().sort_values(ascending=False)
+percent_total = (inf_data.isnull().sum()/inf_data.isnull().count()).sort_values(ascending=False)*100
+missing = pd.concat([total, percent_total], axis=1, keys=["Total", "Percentage"])
+missing_data = missing[missing['Total']>0]
+missing_data
+
+plt.figure(figsize=(9,6))
+sns.set(style="whitegrid")
+sns.barplot(x=missing_data.index, y=missing_data['Percentage'], data = missing_data)
+plt.title('Percentage of missing data by feature')
+plt.xlabel('Features', fontsize=14)
+plt.ylabel('Percentage', fontsize=14)
+plt.show()
+
+# plot histogram to see the distribution of the data
+fig = plt.figure(figsize = (15,20))
+ax = fig.gca()
+inf_data.hist(ax = ax)
+plt.show()
+
+inf_data_short = inf_data.iloc[1:1000,]
+inf_data_short.shape
+inf_data_short.head()
+
+# check for missing values per column
+inf_data_short.isna().sum()
+
+# overall misisng values
+inf_data_short.isna().sum().sum()
+
+# check for duplicates
+inf_data_short.duplicated().sum()
+
+
+
